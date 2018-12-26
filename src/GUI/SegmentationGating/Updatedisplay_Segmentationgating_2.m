@@ -5,6 +5,11 @@ filenames_feature = param.tmp.filenames_feature;
 
 fml = get(param.hNucleiSegmentationGating.Edit_formula,'String');
 %%
+if param.set.border_objects_tracked == 1
+    include_border_object = false;
+else
+    include_border_object = true;
+end
 if flag
     for k = 1:size(list,1)
         s = list(k,1);
@@ -14,7 +19,7 @@ if flag
         if isempty(i)
             continue;
         end
-        [newfeature , newlabel , output_flag] = calculate_segmentation_feature(directories_feature , filenames_feature , s,s_id ,t ,fml );
+        [newfeature , newlabel , output_flag] = calculate_segmentation_feature(directories_feature , filenames_feature , s,s_id ,t ,fml , include_border_object);
         if output_flag == -1
             return;
         end
@@ -28,7 +33,7 @@ else
         s = param.tmp.scenes_for_gating(i);
         s_id = find(param.tmp.scenes_all == s);
         for t = 1:param.tmp.n_time
-            [newfeature , newlabel , output_flag] = calculate_segmentation_feature(directories_feature , filenames_feature ,s, s_id ,t ,fml );
+            [newfeature , newlabel , output_flag] = calculate_segmentation_feature(directories_feature , filenames_feature ,s, s_id ,t ,fml , include_border_object);
             if output_flag == -1
                 return;
             end
@@ -111,9 +116,10 @@ end
 param = Updatedisplay_Segmentationgating_1(param, flag , list);
 end
 %%
-function [newfeature , newlabel , flag] = calculate_segmentation_feature(directories_feature , filenames_feature ,s, s_id ,t ,fml )
+function [newfeature , newlabel , flag] = calculate_segmentation_feature(directories_feature , filenames_feature ,s, s_id ,t ,fml  , include_border_object)
 flag = 1;
 newfeature = [];
+newlabel = [];
 feature_matrix = [];
 file_dir = fullfile(directories_feature{s_id} , filenames_feature{s_id,t});
 if exist(file_dir,'file') ~= 2
@@ -125,9 +131,9 @@ tempdata = load(file_dir);
 if isfield(tempdata,'feature_sha_value')
     feature_matrix = [feature_matrix tempdata.feature_sha_value];
 end
-if isfield(tempdata,'feature_coo_value')
-    feature_matrix = [feature_matrix tempdata.feature_coo_value];
-end
+%if isfield(tempdata,'feature_coo_value')
+%    feature_matrix = [feature_matrix tempdata.feature_coo_value];
+%end
 if isfield(tempdata,'feature_int_value')
     feature_matrix = [feature_matrix tempdata.feature_int_value];
 end
@@ -157,6 +163,8 @@ if size(newfeature,2) ~= length(strfind(fml,','))+1
     return;
 end
 newlabel = [ zeros([size(feature_matrix,1),1])+s zeros([size(feature_matrix,1),1])+t  (1:size(feature_matrix,1))'  ];
-newlabel = newlabel(~tempdata.feature_touch_border,:);
-newfeature = newfeature(~tempdata.feature_touch_border,:);
+if ~include_border_object
+    newlabel = newlabel(~tempdata.feature_touch_border,:);
+    newfeature = newfeature(~tempdata.feature_touch_border,:);
+end
 end

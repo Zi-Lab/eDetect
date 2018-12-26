@@ -1,4 +1,4 @@
-function updatefeature(param_set , directory_nucleimarker,filename_nucleimarker , directory_label_gray , filename_label_gray , directory_feature , filename_feature)
+function updatefeature( param_set , directory_nucleimarker , filename_nucleimarker , directory_label_gray , filename_label_gray , directory_feature , filename_feature )
 if exist(directory_feature,'dir') ~= 7
     mkdir( directory_feature );
 end

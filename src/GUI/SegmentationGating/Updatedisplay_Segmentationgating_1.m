@@ -2,13 +2,13 @@ function param = Updatedisplay_Segmentationgating_1(param, flag , list)
 directories_label_info  = param.tmp.directories_label_info;
 filenames_label_info  = param.tmp.filenames_label_info;
 %%
-if param.set.processing_number_of_cores > 1
+if param.tmp.processing_number_of_cores > 1
     p = gcp('nocreate'); % If no pool, do not create new one.
     if isempty(p)
         hMsg = msgbox('Starting parallel pool...','Information','help');
         delete(findobj(hMsg,'string','OK'));
         try
-            parpool('local',param.set.processing_number_of_cores);
+            parpool('local',param.tmp.processing_number_of_cores);
         catch e
             msgbox([e.message],'Warning','warn');
         end
@@ -30,7 +30,7 @@ else
     deleted = cell([param.tmp.n_time , max(param.tmp.scenes_for_gating)]);
     for s = param.tmp.scenes_for_gating
         s_id = find(param.tmp.scenes_all == s);
-        if param.set.processing_number_of_cores > 1
+        if param.tmp.processing_number_of_cores > 1
             parfor t = 1:param.tmp.n_time
                 [ label_info ] = get_label_info(directories_label_info{s_id} , filenames_label_info{s_id,t});
                 deleted{t,s} = label_info.erroneous;

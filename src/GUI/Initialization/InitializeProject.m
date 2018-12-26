@@ -2,7 +2,10 @@ function [ param ] = InitializeProject
 %
 param.dir.path_projectfile = '';
 param.dir.dir_nucleimarker = '';
-param.dir.dir_proteinofinterest = '';
+param.dir.dir_proteinofinterest1 = '';
+param.dir.dir_proteinofinterest2 = '';
+param.dir.dir_proteinofinterest3 = '';
+param.dir.dir_proteinofinterest4 = '';
 param.dir.dir_label_nuclei = '';
 param.dir.dir_feature = '';
 param.dir.dir_lineage = '';
@@ -10,7 +13,10 @@ param.dir.dir_label_measurement = '';
 param.dir.dir_measurement = '';
 %
 param.met.filename_format_nucleimarker = '';
-param.met.filename_format_proteinofinterest = '';
+param.met.filename_format_proteinofinterest1 = '';
+param.met.filename_format_proteinofinterest2 = '';
+param.met.filename_format_proteinofinterest3 = '';
+param.met.filename_format_proteinofinterest4 = '';
 param.met.min_scene = '';
 param.met.max_scene = '';
 param.met.min_time = '';

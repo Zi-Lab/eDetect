@@ -8,7 +8,7 @@ if isfield(param,'hNucleiCellpairGating')
     end
 end
 %%
-scene_array = str2double(strsplit(param.set.processing_scenes,' '));
+scene_array = str2double(strsplit(param.tmp.processing_scenes,' '));
 if isnan(scene_array)
     scene_array = param.tmp.scenes_all;
 end
@@ -65,13 +65,19 @@ hNucleiCellpairGating.pushtool_DetachTwoChild = uipushtool(  temp2,'CData',img_d
 %%
 %%
 hNucleiCellpairGating.panel_customize = uipanel(  'Parent',hNucleiCellpairGating.fig,'Units','pixels','Position',[1 1 w_ctrl h_p1+h_p2]);
-hNucleiCellpairGating.Check_customize = uicontrol('Parent',hNucleiCellpairGating.panel_customize,'Style','Checkbox' , 'FontWeight', fw1, 'FontSize', fs1                     ,'Units','normalized','Position',[0.00 0.95 1.00 0.05], 'Visible','on' ,'String','Customize','Callback',@CallbackCustomize);
-hNucleiCellpairGating.Text_features   = uicontrol('Parent',hNucleiCellpairGating.panel_customize,'Style','Text'     , 'FontWeight', fw2, 'FontSize', fs2                     ,'Units','normalized','Position',[0.00 0.90 1.00 0.05], 'Visible','off','String','Features');
-hNucleiCellpairGating.List_features   = uicontrol('parent',hNucleiCellpairGating.panel_customize,'Style','listbox'  , 'FontWeight', fw1, 'FontSize', fs1 ,'min',0,'max',300  ,'Units','normalized','Position',[0.00 0.40 1.00 0.50], 'Visible','off','Value',[]);
-hNucleiCellpairGating.Butt_features   = uicontrol('Parent',hNucleiCellpairGating.panel_customize,'Style','push'     , 'FontWeight', fw1, 'FontSize', fs1                     ,'Units','normalized','Position',[0.00 0.35 1.00 0.05], 'Visible','off','String','Generate formula','Callback', @CallbackListbox_cellpairgating);
-hNucleiCellpairGating.Text_formula    = uicontrol('Parent',hNucleiCellpairGating.panel_customize,'Style','Text'     , 'FontWeight', fw2, 'FontSize', fs2                     ,'Units','normalized','Position',[0.00 0.30 1.00 0.05], 'Visible','off','String','Formula');
-hNucleiCellpairGating.Edit_formula    = uicontrol('parent',hNucleiCellpairGating.panel_customize,'Style','edit'     , 'FontWeight', fw1, 'FontSize', fs1 ,'min',0,'max',300  ,'Units','normalized','Position',[0.00 0.10 1.00 0.20], 'Visible','off');
-hNucleiCellpairGating.Check_normalize = uicontrol('Parent',hNucleiCellpairGating.panel_customize,'Style','Checkbox' , 'FontWeight', fw1, 'FontSize', fs1                     ,'Units','normalized','Position',[0.00 0.05 1.00 0.05], 'Visible','off','String','Normalize');
+hNucleiCellpairGating.Text_features   = uicontrol('Parent',hNucleiCellpairGating.panel_customize,'Style','Text'     , 'FontWeight', fw2, 'FontSize', fs2                     ,'Units','normalized','Position',[0.00 0.95 1.00 0.05], 'Visible','on' ,'String','Settings');
+hNucleiCellpairGating.bg_combinations = uibuttongroup('Parent',hNucleiCellpairGating.panel_customize,'Visible','off'                                                         ,'Units','normalized','Position',[0.00 0.80 1.00 0.15]);
+hNucleiCellpairGating.Radio11 = uicontrol('Parent',hNucleiCellpairGating.bg_combinations ,'Style','radiobutton', 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 0.75 1.00 0.25 ],'String','Formula 1','HandleVisibility','off','Callback',@CallbackCustomize);
+hNucleiCellpairGating.Radio12 = uicontrol('Parent',hNucleiCellpairGating.bg_combinations ,'Style','radiobutton', 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 0.50 1.00 0.25 ],'String','Formula 2','HandleVisibility','off','Callback',@CallbackCustomize,'Value',1);
+hNucleiCellpairGating.Radio13 = uicontrol('Parent',hNucleiCellpairGating.bg_combinations ,'Style','radiobutton', 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 0.25 1.00 0.25 ],'String','Formula 3','HandleVisibility','off','Callback',@CallbackCustomize);
+hNucleiCellpairGating.Radio14 = uicontrol('Parent',hNucleiCellpairGating.bg_combinations ,'Style','radiobutton', 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 0.00 1.00 0.25 ],'String','User defined','HandleVisibility','off','Callback',@CallbackCustomize);
+hNucleiCellpairGating.bg_combinations.Visible = 'on';
+hNucleiCellpairGating.Text_features   = uicontrol('Parent',hNucleiCellpairGating.panel_customize,'Style','Text'     , 'FontWeight', fw2, 'FontSize', fs2                     ,'Units','normalized','Position',[0.00 0.75 1.00 0.05], 'Visible','on' ,'String','Features');
+hNucleiCellpairGating.List_features   = uicontrol('parent',hNucleiCellpairGating.panel_customize,'Style','listbox'  , 'FontWeight', fw1, 'FontSize', fs1 ,'min',0,'max',300  ,'Units','normalized','Position',[0.00 0.35 1.00 0.40], 'Visible','on' ,'Value',[]);
+hNucleiCellpairGating.Butt_features   = uicontrol('Parent',hNucleiCellpairGating.panel_customize,'Style','push'     , 'FontWeight', fw1, 'FontSize', fs1                     ,'Units','normalized','Position',[0.00 0.30 1.00 0.05], 'Visible','off','String','Generate formula','Callback', @CallbackListbox_cellpairgating);
+hNucleiCellpairGating.Text_formula    = uicontrol('Parent',hNucleiCellpairGating.panel_customize,'Style','Text'     , 'FontWeight', fw2, 'FontSize', fs2                     ,'Units','normalized','Position',[0.00 0.25 1.00 0.05], 'Visible','on' ,'String','Formula');
+hNucleiCellpairGating.Edit_formula    = uicontrol('parent',hNucleiCellpairGating.panel_customize,'Style','edit'     , 'FontWeight', fw1, 'FontSize', fs1 ,'min',0,'max',300  ,'Units','normalized','Position',[0.00 0.10 1.00 0.15], 'Visible','on' );
+hNucleiCellpairGating.Check_normalize = uicontrol('Parent',hNucleiCellpairGating.panel_customize,'Style','Checkbox' , 'FontWeight', fw1, 'FontSize', fs1                     ,'Units','normalized','Position',[0.00 0.05 1.00 0.05], 'Visible','on' ,'String','Normalize','Value',0,'Callback',@showbutton);
 hNucleiCellpairGating.Butt_formula    = uicontrol('Parent',hNucleiCellpairGating.panel_customize,'Style','push'     , 'FontWeight', fw1, 'FontSize', fs1                     ,'Units','normalized','Position',[0.00 0.00 1.00 0.05], 'Visible','off','String','Update','Callback', @refreshcellpairgating2);
 %%
 %%
@@ -83,9 +89,9 @@ if ~isempty(temp0)
     if isfield(samplefile,'feature_sha_name')
         param.tmp.feature_names = [param.tmp.feature_names samplefile.feature_sha_name];
     end
-    if isfield(samplefile,'feature_coo_name')
-        param.tmp.feature_names = [param.tmp.feature_names samplefile.feature_coo_name];
-    end
+    %if isfield(samplefile,'feature_coo_name')
+    %    param.tmp.feature_names = [param.tmp.feature_names samplefile.feature_coo_name];
+    %end
     if isfield(samplefile,'feature_int_name')
         param.tmp.feature_names = [param.tmp.feature_names samplefile.feature_int_name];
     end
@@ -104,7 +110,7 @@ for i = 1:length(str)
     str{i} = ['v{' num2str(i) '}  ' str{i}];
 end
 set(hNucleiCellpairGating.List_features,'String',str);
-str_formula = 'v{1},v{4}';
+str_formula = param.tmp.str_formula_2;
 set(hNucleiCellpairGating.Edit_formula,'String',str_formula);
 %%
 hNucleiCellpairGating.axes1 = axes('Parent',hNucleiCellpairGating.fig, 'Units','pixels','Position',[w_ctrl+1 1 w_axes h_p1+h_p2], 'xtick',[], 'ytick',[] );
@@ -119,6 +125,11 @@ param = Updatedisplay_Cellpairgating_2(param , false, []);
 InformAllInterfaces(param);
 end
 %%
+function showbutton(h,~)
+param = guidata(h);
+param.hNucleiCellpairGating.Butt_formula.Visible = 'on';
+guidata(h,param);
+end
 function clearselected(h,~)
 param = guidata(h);
 if isfield(param.hNucleiCellpairGating,'poly')
@@ -189,24 +200,25 @@ end
 function CallbackCustomize(h,~)
 param = guidata(h);
 %%
-flag = get(param.hNucleiCellpairGating.Check_customize,'value');
-if flag == 0
-    param.hNucleiCellpairGating.Text_features.Visible = 'off';
-    param.hNucleiCellpairGating.List_features.Visible = 'off';
-    param.hNucleiCellpairGating.Butt_features.Visible = 'off';
-    param.hNucleiCellpairGating.Text_formula.Visible = 'off';
-    param.hNucleiCellpairGating.Edit_formula.Visible = 'off';
-    param.hNucleiCellpairGating.Butt_formula.Visible = 'off';
-    param.hNucleiCellpairGating.Check_normalize.Visible = 'off';
-else
-    param.hNucleiCellpairGating.Text_features.Visible = 'on';
-    param.hNucleiCellpairGating.List_features.Visible = 'on';
+if param.hNucleiCellpairGating.Radio14.Value == 1
     param.hNucleiCellpairGating.Butt_features.Visible = 'on';
-    param.hNucleiCellpairGating.Text_formula.Visible = 'on';
-    param.hNucleiCellpairGating.Edit_formula.Visible = 'on';
     param.hNucleiCellpairGating.Butt_formula.Visible = 'on';
-    param.hNucleiCellpairGating.Check_normalize.Visible = 'on';
+else
+    if param.hNucleiCellpairGating.Radio11.Value == 1
+        str_formula = param.tmp.str_formula_1;
+    elseif param.hNucleiCellpairGating.Radio12.Value == 1
+        str_formula = param.tmp.str_formula_2;
+    elseif param.hNucleiCellpairGating.Radio13.Value == 1
+        str_formula = param.tmp.str_formula_3;
+    elseif param.hNucleiCellpairGating.Radio14.Value == 1
+        str_formula = param.tmp.str_formula_4;
+    end
+    set(param.hNucleiCellpairGating.Edit_formula,'String',str_formula);
+    set(param.hNucleiCellpairGating.Check_normalize,'Value',0);
+    param.hNucleiCellpairGating.Butt_features.Visible = 'off';
+    param.hNucleiCellpairGating.Butt_formula.Visible = 'off';
 end
+param = Updatedisplay_Cellpairgating_2(param , false, []);
 %%
 guidata(h,param);
 end

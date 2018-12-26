@@ -131,6 +131,7 @@ end
 function [newfeature,  newlabel, flag] = calculate_cellpair_feature(directories_feature , filenames_feature ,s, s_id ,t ,fml ,temp_track)
 flag = 1;
 newfeature = [];
+newlabel = [];
 feature_matrix = [];
 file_dir = fullfile(directories_feature{s_id}, filenames_feature{s_id,t});
 if exist(file_dir,'file') ~= 2
@@ -141,9 +142,9 @@ tempdata = load(file_dir);
 if isfield(tempdata,'feature_sha_value')
     feature_matrix = [feature_matrix tempdata.feature_sha_value];
 end
-if isfield(tempdata,'feature_coo_value')
-    feature_matrix = [feature_matrix tempdata.feature_coo_value];
-end
+%if isfield(tempdata,'feature_coo_value')
+%    feature_matrix = [feature_matrix tempdata.feature_coo_value];
+%end
 if isfield(tempdata,'feature_int_value')
     feature_matrix = [feature_matrix tempdata.feature_int_value];
 end
@@ -160,11 +161,6 @@ end
 coo = tempdata.feature_coo_value;
 sha = tempdata.feature_sha_value;
 l1 = size(coo,1);
-m1 = repmat(coo,[1,1,l1]);
-m2 = permute(m1,[3,2,1]);
-m1 = permute(m1,[1,3,2]);
-m2 = permute(m2,[1,3,2]);
-dist = sqrt(sum((m1 - m2).^2,3));
 %
 A = temp_track.track{t};
 mat = repmat(A,[1,l1]);
@@ -185,19 +181,14 @@ f2 = A(s1) ~= 0;
 pairs = pairs(f1 & f2 , : );
 l2 = size(pairs,1);
 %
-feature1 = NaN([l2,1]);
-for j = 1:l2
-    feature1(j) = dist(pairs(j,1),pairs(j,2)) ./ sqrt( sha(pairs(j,1),7) * sha(pairs(j,2),7) );
-end
-%
-feature2 = abs(sha(pairs(:,1),5) - sha(pairs(:,2),5));
+feature2 = abs(sha(pairs(:,1),3) - sha(pairs(:,2),3));
 feature2 = min([feature2 , 180 - feature2],[],2);
 %
 feature3_temp = coo(pairs(:,2),:) - coo(pairs(:,1),:);
 feature3_temp = 180 / pi * atan(- feature3_temp(:,1) ./ feature3_temp(:,2));
-feature3_temp_1 = abs(sha(pairs(:,1),5) - feature3_temp);
+feature3_temp_1 = abs(sha(pairs(:,1),3) - feature3_temp);
 feature3_temp_1 = min([feature3_temp_1 , 180 - feature3_temp_1],[],2);
-feature3_temp_2 = abs(sha(pairs(:,2),5) - feature3_temp);
+feature3_temp_2 = abs(sha(pairs(:,2),3) - feature3_temp);
 feature3_temp_2 = min([feature3_temp_2 , 180 - feature3_temp_2],[],2);
 feature3 = sort([feature3_temp_1 feature3_temp_2] , 2);
 %%
@@ -215,7 +206,7 @@ catch
     flag = -1;
     return;
 end
-if size(newfeature,2) ~= 2*length(strfind(fml,','))+2+3
+if size(newfeature,2) ~= 2*length(strfind(fml,','))+2+3 && ~isempty(fml)
     msgbox('Please specify the input for dimension reduction in the correct format.','Error','error');
     flag = -1;
     return;

@@ -1,4 +1,4 @@
-function [ L_new , ADJ_new , info_new] = objects_merge( L , ADJ , info , ids )
+function [ L_new , ADJ_new , info_new ] = objects_merge( L , ADJ , info , ids )
 [h,w] = size(L);
 L_new = L;
 ADJ_new = ADJ;

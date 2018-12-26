@@ -22,6 +22,14 @@ if h == param.hLineage.Check_filt_foi
         param.hLineage.Edit_filt_max.Enable = 'on';
         param.tmp.frames_filter_min = 1;
         param.tmp.frames_filter_max = param.tmp.n_time;
+        param.tmp.frames_display_min = 1;
+        param.tmp.frames_display_max = param.tmp.n_time;
+        param.tmp.frames_filter_min = param.tmp.frames_filter_min;
+        param.tmp.frames_filter_max = param.tmp.frames_filter_max;
+        param.tmp.frames_display_min = param.tmp.frames_filter_min;
+        param.tmp.frames_display_max = param.tmp.frames_filter_max;
+        param.hLineage.Edit_disp_min.String = num2str(param.tmp.frames_filter_min);
+        param.hLineage.Edit_disp_max.String = num2str(param.tmp.frames_filter_max);
         param.hLineage.Edit_filt_min.String = num2str(param.tmp.frames_filter_min);
         param.hLineage.Edit_filt_max.String = num2str(param.tmp.frames_filter_max);
     else

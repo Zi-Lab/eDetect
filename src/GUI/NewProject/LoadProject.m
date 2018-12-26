@@ -35,15 +35,36 @@ end
 %% check input images
 try
     if ~isempty(param_.dir.dir_nucleimarker)
-        flag_nm = CheckInputImages(param_.tmp.dir_nucleimarker      , param_.tmp.filenames_nucleimarker     , param_.tmp.scenes_all , param_.set.processing_scenes , param_.tmp.n_time , false);
+        flag_nm = CheckInputImages(param_.tmp.dir_nucleimarker      , param_.tmp.filenames_nucleimarker     , param_.tmp.scenes_all , param_.tmp.n_time , false);
         if ~flag_nm
             msgbox(str,'Error','error');
             return;
         end
     end
-    if ~isempty(param_.dir.dir_proteinofinterest)
-        flag_pi = CheckInputImages(param_.tmp.dir_proteinofinterest , param_.tmp.filenames_proteinofinterest, param_.tmp.scenes_all , param_.set.processing_scenes , param_.tmp.n_time , false);
-        if ~flag_pi
+    if ~isempty(param_.dir.dir_proteinofinterest1)
+        flag_pi1 = CheckInputImages(param_.tmp.dir_proteinofinterest1 , param_.tmp.filenames_proteinofinterest1, param_.tmp.scenes_all , param_.tmp.n_time , false);
+        if ~flag_pi1
+            msgbox(str,'Error','error');
+            return;
+        end
+    end
+    if ~isempty(param_.dir.dir_proteinofinterest2)
+        flag_pi2 = CheckInputImages(param_.tmp.dir_proteinofinterest2 , param_.tmp.filenames_proteinofinterest2, param_.tmp.scenes_all , param_.tmp.n_time , false);
+        if ~flag_pi2
+            msgbox(str,'Error','error');
+            return;
+        end
+    end
+    if ~isempty(param_.dir.dir_proteinofinterest3)
+        flag_pi3 = CheckInputImages(param_.tmp.dir_proteinofinterest3 , param_.tmp.filenames_proteinofinterest3, param_.tmp.scenes_all , param_.tmp.n_time , false);
+        if ~flag_pi3
+            msgbox(str,'Error','error');
+            return;
+        end
+    end
+    if ~isempty(param_.dir.dir_proteinofinterest4)
+        flag_pi4 = CheckInputImages(param_.tmp.dir_proteinofinterest4 , param_.tmp.filenames_proteinofinterest4, param_.tmp.scenes_all , param_.tmp.n_time , false);
+        if ~flag_pi4
             msgbox(str,'Error','error');
             return;
         end

@@ -2,18 +2,18 @@ function [ param ] = CheckStatus( param )
 if ~isvalid(param.hMain.fig)
     return;
 end
-set(param.hMain.pushtool_parameters                 , 'Enable', 'off');
-set(param.hMain.pushtool_settings                   , 'Enable', 'off');
+set(param.hMain.pushtool_parameters         , 'Enable', 'off');
+set(param.hMain.pushtool_settings           , 'Enable', 'off');
 %
-set(param.hMain.pushtool_cellsegmentation           , 'Enable', 'off');
-set(param.hMain.pushtool_featureextraction          , 'Enable', 'off');
-set(param.hMain.pushtool_celltracking               , 'Enable', 'off');
-set(param.hMain.pushtool_celllineagereconstruction  , 'Enable', 'off');
-set(param.hMain.pushtool_measurement                , 'Enable', 'off');
+set(param.hMain.pushtool_cellsegmentation    , 'Enable', 'off');
+set(param.hMain.pushtool_featureextraction   , 'Enable', 'off');
+set(param.hMain.pushtool_celltracking        , 'Enable', 'off');
+set(param.hMain.pushtool_celllineage         , 'Enable', 'off');
+set(param.hMain.pushtool_measurement         , 'Enable', 'off');
 %
-set(param.hMain.pushtool_segmentationgating         , 'Enable', 'off');
-set(param.hMain.pushtool_cellpairgating             , 'Enable', 'off');
-set(param.hMain.pushtool_celllineagesdisplay        , 'Enable', 'off');
+set(param.hMain.pushtool_segmentationgating  , 'Enable', 'off');
+set(param.hMain.pushtool_cellpairgating      , 'Enable', 'off');
+set(param.hMain.pushtool_celllineagesdisplay , 'Enable', 'off');
 %%
 flag_label_nuclei = true;
 flag_feature = true;
@@ -23,16 +23,19 @@ flag_lineage = true;
 %%
 flag_param_segmentation = check_parameters_seg(false , param.seg.min_object , param.seg.med_object , param.seg.max_object);
 flag_param_tracking     = check_parameters_tra(false , param.tra.max_frame_displacement);
-flag_param_measurement  = check_parameters_exp(false , param.dir.dir_proteinofinterest , param.exp.nuclei_radii , param.exp.cytoplasm_ring_inner_radii , param.exp.cytoplasm_ring_outer_radii );
-if isempty(param.dir.dir_proteinofinterest) || isempty(param.met.filename_format_proteinofinterest)
+flag_param_measurement  = check_parameters_exp(false , param.dir.dir_proteinofinterest1 , param.exp.nuclei_radii , param.exp.cytoplasm_ring_inner_radii , param.exp.cytoplasm_ring_outer_radii );
+if isempty(param.dir.dir_proteinofinterest1) || isempty(param.met.filename_format_proteinofinterest1)
     flag_param_measurement = false;
 end
 %%
 %%
-flag_nm = CheckInputImages(param.tmp.dir_nucleimarker      , param.tmp.filenames_nucleimarker     , param.tmp.scenes_all , param.set.processing_scenes , param.tmp.n_time , false);
-flag_pi = CheckInputImages(param.tmp.dir_proteinofinterest , param.tmp.filenames_proteinofinterest, param.tmp.scenes_all , param.set.processing_scenes , param.tmp.n_time , false);
+flag_nm = CheckInputImages(param.tmp.dir_nucleimarker        , param.tmp.filenames_nucleimarker      , param.tmp.scenes_all , param.tmp.n_time , false);
+flag_pi1 = CheckInputImages(param.tmp.dir_proteinofinterest1 , param.tmp.filenames_proteinofinterest1, param.tmp.scenes_all , param.tmp.n_time , false);
+%flag_pi2 = CheckInputImages(param.tmp.dir_proteinofinterest2 , param.tmp.filenames_proteinofinterest2, param.tmp.scenes_all , param.tmp.n_time , false);
+%flag_pi3 = CheckInputImages(param.tmp.dir_proteinofinterest3 , param.tmp.filenames_proteinofinterest3, param.tmp.scenes_all , param.tmp.n_time , false);
+%flag_pi4 = CheckInputImages(param.tmp.dir_proteinofinterest4 , param.tmp.filenames_proteinofinterest4, param.tmp.scenes_all , param.tmp.n_time , false);
 %%
-scene_array = str2double(strsplit(param.set.processing_scenes,' '));
+scene_array = str2double(strsplit(param.tmp.processing_scenes,' '));
 if isnan(scene_array)
     scene_array = param.tmp.scenes_all;
 end
@@ -86,16 +89,16 @@ if flag_nm
     if flag_label_nuclei && flag_feature
         set(param.hMain.pushtool_segmentationgating         , 'Enable', 'on');
         if flag_param_tracking
-            set(param.hMain.pushtool_celltracking               , 'Enable', 'on');
+            set(param.hMain.pushtool_celltracking           , 'Enable', 'on');
         end
     end
     if flag_label_nuclei && flag_feature && flag_track
         set(param.hMain.pushtool_cellpairgating             , 'Enable', 'on');
-        set(param.hMain.pushtool_celllineagereconstruction  , 'Enable', 'on');
+        set(param.hMain.pushtool_celllineage  , 'Enable', 'on');
     end
     if flag_label_nuclei && flag_feature && flag_lineage
         set(param.hMain.pushtool_celllineagesdisplay        , 'Enable', 'on');
-        if flag_pi && flag_param_measurement
+        if flag_pi1 && flag_param_measurement
             set(param.hMain.pushtool_measurement            , 'Enable', 'on');
         end
     end
@@ -105,6 +108,11 @@ end
 if isempty(param.tmp.manual_label_image) || isempty(param.tmp.manual_label_data)
     set(param.hMain.pushtool_draw_polygon      , 'Enable', 'off');
     set(param.hMain.pushtool_deselect_all      , 'Enable', 'off');
+    set(param.hMain.pushtool_draw_object       , 'Enable', 'off');
+    set(param.hMain.pushtool_create_objects    , 'Enable', 'off');
+    set(param.hMain.pushtool_remove_objects    , 'Enable', 'off');
+    set(param.hMain.pushtool_draw_division     , 'Enable', 'off');
+    set(param.hMain.pushtool_divide_objects    , 'Enable', 'off');
     set(param.hMain.pushtool_delete_objects    , 'Enable', 'off');
     set(param.hMain.pushtool_recover_objects   , 'Enable', 'off');
     set(param.hMain.pushtool_split_objects     , 'Enable', 'off');
@@ -115,6 +123,11 @@ if isempty(param.tmp.manual_label_image) || isempty(param.tmp.manual_label_data)
 else
     set(param.hMain.pushtool_draw_polygon      , 'Enable', 'on');
     set(param.hMain.pushtool_deselect_all      , 'Enable', 'on');
+    set(param.hMain.pushtool_draw_object       , 'Enable', 'on');
+    set(param.hMain.pushtool_create_objects    , 'Enable', 'on');
+    set(param.hMain.pushtool_remove_objects    , 'Enable', 'on');
+    set(param.hMain.pushtool_draw_division     , 'Enable', 'on');
+    set(param.hMain.pushtool_divide_objects    , 'Enable', 'on');
     set(param.hMain.pushtool_delete_objects    , 'Enable', 'on');
     set(param.hMain.pushtool_recover_objects   , 'Enable', 'on');
     set(param.hMain.pushtool_split_objects     , 'Enable', 'on');
@@ -124,11 +137,6 @@ else
     set(param.hMain.toggletool_overlay         , 'Enable', 'on');
 end
 %%
-if flag_pi
-    set(param.hMain.toggletool_channel         , 'Enable', 'on');
-else
-    set(param.hMain.toggletool_channel         , 'Enable', 'off');
-end
 %%
 if isfield(param.hMain,'Text5')
     if isempty(param.tmp.manual_label_image) || isempty(param.tmp.manual_label_data)

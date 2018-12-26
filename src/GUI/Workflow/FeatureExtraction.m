@@ -6,7 +6,7 @@ filenames_label_gray  = param.tmp.filenames_label_gray;
 directories_feature = param.tmp.directories_feature;
 filenames_feature = param.tmp.filenames_feature;
 %%
-scene_array = str2double(strsplit(param.set.processing_scenes,' '));
+scene_array = str2double(strsplit(param.tmp.processing_scenes,' '));
 if isnan(scene_array)
     scene_array = param.tmp.scenes_all;
 end
@@ -26,13 +26,13 @@ if exist(param.tmp.dir_feature,'dir') == 7
     end
 end
 %%
-if param.set.processing_number_of_cores > 1
+if param.tmp.processing_number_of_cores > 1
     p = gcp('nocreate'); % If no pool, do not create new one.
     if isempty(p)
         hMsg = msgbox('Starting parallel pool...','Information','help');
         delete(findobj(hMsg,'string','OK'));
         try
-            parpool('local',param.set.processing_number_of_cores);
+            parpool('local',param.tmp.processing_number_of_cores);
         catch e
             msgbox([e.message],'Warning','warn');
         end
@@ -53,7 +53,7 @@ for i = 1:length(scenes_for_feature)
     if exist(directories_feature{s_id} ,'dir') ~= 7
         mkdir(directories_feature{s_id} );
     end
-    if param.set.processing_number_of_cores > 1
+    if param.tmp.processing_number_of_cores > 1
         parfor t = 1:param.tmp.n_time
             updatefeature(param_set , directory_nucleimarker , filenames_nucleimarker{s_id,t} , directories_label_gray{s_id} , filenames_label_gray{s_id,t} , directories_feature{s_id} , filenames_feature{s_id,t});
             hbar.iterate(1);

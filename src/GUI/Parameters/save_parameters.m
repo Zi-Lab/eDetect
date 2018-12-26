@@ -1,6 +1,15 @@
 function save_parameters(h,~)
 param = guidata(h);
 %%
+%% 0 directories
+param.dir.dir_label_nuclei = get(param.hSetParameter.Edit_set_dir_nuc_lab,'String');
+param.dir.dir_feature = get(param.hSetParameter.Edit_set_dir_nuc_fea,'String');
+param.dir.dir_lineage = get(param.hSetParameter.Edit_set_dir_lineage,'String');
+param.dir.dir_label_measurement = get(param.hSetParameter.Edit_set_dir_cyt_lab,'String');
+param.dir.dir_measurement1 = get(param.hSetParameter.Edit_set_dir_measure1,'String');
+param.dir.dir_measurement2 = get(param.hSetParameter.Edit_set_dir_measure2,'String');
+param.dir.dir_measurement3 = get(param.hSetParameter.Edit_set_dir_measure3,'String');
+param.dir.dir_measurement4 = get(param.hSetParameter.Edit_set_dir_measure4,'String');
 %%
 %% 1 segmentation
 str1 = get(param.hSetParameter.Edit_param_min_obj_rad, 'String');
@@ -31,7 +40,7 @@ str03 = get(param.hSetParameter.Edit_radii_c_2,'String');
 num01 = str2double(str01);
 num02 = str2double(str02);
 num03 = str2double(str03);
-flag_exp = check_parameters_exp(true  ,  param.dir.dir_proteinofinterest  ,  num01,num02,num03);
+flag_exp = check_parameters_exp(true  ,  param.dir.dir_proteinofinterest1  ,  num01,num02,num03);
 if ~flag_exp
     return;
 end

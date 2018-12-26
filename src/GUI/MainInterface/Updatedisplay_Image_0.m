@@ -19,15 +19,39 @@ else
 end
 set(param.hMain.Edit2,'String',num2str(CurrentFrame));
 %%
-CurrentMin = round((get(param.hMain.SliderFrame3,'Value')));
-set(param.hMain.Edit3,'String',num2str(CurrentMin));
-CurrentMax = round((get(param.hMain.SliderFrame4,'Value')));
-set(param.hMain.Edit4,'String',num2str(CurrentMax));
-CurrentTransparency = round(1000*(get(param.hMain.SliderFrame5,'Value')))/1000;
-set(param.hMain.Edit5,'String',num2str(CurrentTransparency));
 RadioValue1 = get(param.hMain.Radio11, 'value');
 RadioValue2 = get(param.hMain.Radio12, 'value');
 RadioValue3 = get(param.hMain.Radio13, 'value');
+if RadioValue1 == 1
+    param.hMain.Text3.Visible = 'on';
+    param.hMain.Edit3.Visible = 'on';
+    param.hMain.SliderFrame3.Visible = 'on';
+    param.hMain.Text4.Visible = 'on';
+    param.hMain.Edit4.Visible = 'on';
+    param.hMain.SliderFrame4.Visible = 'on';
+else
+    param.hMain.Text3.Visible = 'off';
+    param.hMain.Edit3.Visible = 'off';
+    param.hMain.SliderFrame3.Visible = 'off';
+    param.hMain.Text4.Visible = 'off';
+    param.hMain.Edit4.Visible = 'off';
+    param.hMain.SliderFrame4.Visible = 'off';
+end
+if RadioValue1 == 1
+    CurrentMin = round((get(param.hMain.SliderFrame3,'Value')));
+    CurrentMax = round((get(param.hMain.SliderFrame4,'Value')));
+elseif RadioValue2 == 1
+    CurrentMin = double(my_quantile(param.tmp.I(:),0.00));
+    CurrentMax = double(my_quantile(param.tmp.I(:),1.00));
+elseif RadioValue3 == 1
+    CurrentMin = double(my_quantile(param.tmp.I(:),0.01));
+    CurrentMax = double(my_quantile(param.tmp.I(:),0.99));
+end
+set(param.hMain.Edit3,'String',num2str(CurrentMin));
+set(param.hMain.Edit4,'String',num2str(CurrentMax));
+set(param.hMain.SliderFrame3,'Value',CurrentMin);
+set(param.hMain.SliderFrame4,'Value',CurrentMax);
+%%
 if isempty(param.tmp.I) || (CurrentMin >= CurrentMax && RadioValue1 == 1)
     param.hMain.Image = imshow([],'Parent',param.hMain.axes1);
     return;
@@ -38,31 +62,7 @@ if size(param.tmp.I,3) > 1
     return;
 end
 %%
-if RadioValue1 == 1
-    I_tmp = imadjust(param.tmp.I , [double(CurrentMin)/param.tmp.val_range;                        double(CurrentMax)/param.tmp.val_range],                       [double(param.tmp.val_min)/param.tmp.val_range; double(param.tmp.val_max)/param.tmp.val_range] );
-    param.hMain.Text3.Visible = 'on';
-    param.hMain.Edit3.Visible = 'on';
-    param.hMain.SliderFrame3.Visible = 'on';
-    param.hMain.Text4.Visible = 'on';
-    param.hMain.Edit4.Visible = 'on';
-    param.hMain.SliderFrame4.Visible = 'on';
-elseif RadioValue2 == 1
-    I_tmp = imadjust(param.tmp.I , [double(my_quantile(param.tmp.I(:),0.00))/param.tmp.val_range;  double(my_quantile(param.tmp.I(:),1.00))/param.tmp.val_range], [double(param.tmp.val_min)/param.tmp.val_range; double(param.tmp.val_max)/param.tmp.val_range] );
-    param.hMain.Text3.Visible = 'off';
-    param.hMain.Edit3.Visible = 'off';
-    param.hMain.SliderFrame3.Visible = 'off';
-    param.hMain.Text4.Visible = 'off';
-    param.hMain.Edit4.Visible = 'off';
-    param.hMain.SliderFrame4.Visible = 'off';
-elseif RadioValue3 == 1
-    I_tmp = imadjust(param.tmp.I , [double(my_quantile(param.tmp.I(:),0.01))/param.tmp.val_range;  double(my_quantile(param.tmp.I(:),0.99))/param.tmp.val_range], [double(param.tmp.val_min)/param.tmp.val_range; double(param.tmp.val_max)/param.tmp.val_range] );
-    param.hMain.Text3.Visible = 'off';
-    param.hMain.Edit3.Visible = 'off';
-    param.hMain.SliderFrame3.Visible = 'off';
-    param.hMain.Text4.Visible = 'off';
-    param.hMain.Edit4.Visible = 'off';
-    param.hMain.SliderFrame4.Visible = 'off';
-end
+I_tmp = imadjust(param.tmp.I , [double(CurrentMin)/param.tmp.val_range; double(CurrentMax)/param.tmp.val_range], [double(param.tmp.val_min)/param.tmp.val_range; double(param.tmp.val_max)/param.tmp.val_range] );
 I_RGB_layer1 = repmat(I_tmp,[1 1 3]);
 label_image = param.tmp.manual_label_image;
 label_data  = param.tmp.manual_label_data;
@@ -94,6 +94,9 @@ elseif strcmp( get(param.hMain.toggletool_overlay,'State') , 'off')
         I_RGB_layer2 = uint8(zeros([param.tmp.h,param.tmp.w,3]));
     end
 end
+%%
+CurrentTransparency = round(1000*(get(param.hMain.SliderFrame5,'Value')))/1000;
+set(param.hMain.Edit5,'String',num2str(CurrentTransparency));
 I_RGB_final = double(I_RGB_layer1)/double(intmax(class(I_RGB_layer1))) * (1 - 0*CurrentTransparency) + double(I_RGB_layer2)/double(intmax(class(I_RGB_layer2))) * (1 - 1*CurrentTransparency);
 %%
 %%

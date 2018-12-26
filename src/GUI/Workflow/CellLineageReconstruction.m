@@ -4,7 +4,7 @@ param = guidata(h);
 filenames_track = param.tmp.filenames_track;
 filenames_lineage = param.tmp.filenames_lineage;
 %%
-scene_array = str2double(strsplit(param.set.processing_scenes,' '));
+scene_array = str2double(strsplit(param.tmp.processing_scenes,' '));
 if isnan(scene_array)
     scene_array = param.tmp.scenes_all;
 end

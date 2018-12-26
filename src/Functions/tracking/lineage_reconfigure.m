@@ -8,5 +8,6 @@ end
 for i = t:min(t+1,length(track))
     [ new_lineage ]  = lineage_clean( new_lineage , i   , length(track{i}) );
 end
+new_lineage(all(new_lineage==0,2),:) = [];
 end
 

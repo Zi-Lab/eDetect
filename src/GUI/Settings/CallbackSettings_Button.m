@@ -1,6 +1,23 @@
 function CallbackSettings_Button( h , ~ )
 param = guidata(h);
 %
+if     get(param.hSettings.Radio_importsegmentation1,'Value') == 1
+    param.set.source_segmentation = 1;
+elseif get(param.hSettings.Radio_importsegmentation2,'Value') == 1
+    param.set.source_segmentation = 2;
+else
+    
+end
+%
+if     get(param.hSettings.Radio_importtracking1,'Value') == 1
+    param.set.source_tracking = 1;
+elseif get(param.hSettings.Radio_importtracking2,'Value') == 1
+    param.set.source_tracking = 2;
+else
+    
+end
+%
+%{
 if     get(param.hSettings.Radio81,'Value') == 1
     param.set.deleted_objects_display = 1;
 elseif get(param.hSettings.Radio82,'Value') == 1
@@ -10,6 +27,7 @@ elseif get(param.hSettings.Radio83,'Value') == 1
 else
     
 end
+%}
 %
 if     get(param.hSettings.Radio51,'Value') == 1
     param.set.manual_correction_segmentation_update = 1;
@@ -31,6 +49,7 @@ else
     
 end
 %
+%{
 if     get(param.hSettings.Radio71,'Value') == 1
     param.set.manual_correction_split_size = 1;
 elseif get(param.hSettings.Radio72,'Value') == 1
@@ -38,6 +57,7 @@ elseif get(param.hSettings.Radio72,'Value') == 1
 else
     
 end
+%}
 %
 if     get(param.hSettings.Radio41,'Value') == 1
     param.set.segmentation_declump_merge = 1;
@@ -49,13 +69,19 @@ else
     
 end
 %%
-set(param.hSettings.Check_feature_coo, 'Value', 1);
-set(param.hSettings.Check_feature_sha, 'Value', 1);
-if get(param.hSettings.Check_feature_coo , 'value') == 1
-    param.set.calculate_coordinate = true;
-else
-    param.set.calculate_coordinate = false;
+if get(param.hSettings.Radio_track_border_1,'Value') == 1
+    param.set.border_objects_tracked = 1;
+elseif get(param.hSettings.Radio_track_border_2,'Value') == 1
+    param.set.border_objects_tracked = 2;
 end
+%%
+%set(param.hSettings.Check_feature_coo, 'Value', 1);
+%if get(param.hSettings.Check_feature_coo , 'value') == 1
+%    param.set.calculate_coordinate = true;
+%else
+%    param.set.calculate_coordinate = false;
+%end
+set(param.hSettings.Check_feature_sha, 'Value', 1);
 if get(param.hSettings.Check_feature_sha , 'value') == 1
     param.set.calculate_shape = true;
 else

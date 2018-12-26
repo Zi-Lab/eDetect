@@ -8,7 +8,7 @@ if isfield(param,'hNucleiSegmentationGating')
     end
 end
 %%
-scene_array = str2double(strsplit(param.set.processing_scenes,' '));
+scene_array = str2double(strsplit(param.tmp.processing_scenes,' '));
 if isnan(scene_array)
     scene_array = param.tmp.scenes_all;
 end
@@ -48,6 +48,8 @@ set(findall(temp1,'tag','Plottools.PlottoolsOn')      ,'Visible','Off');
 
 %%
 %hNucleiSegmentationGating.toolbar = uitoolbar(hNucleiSegmentationGating.fig);
+img_display_deleted = imread('display_deleted.tif');
+img_display_deleted = double(img_display_deleted(:,:,1:3)) / 255;
 img_draw_polygon = imread('draw_polygon.tif');
 img_draw_polygon = double(img_draw_polygon(:,:,1:3)) / 255;
 img_delete_polygon = imread('delete_polygon.tif');
@@ -60,26 +62,36 @@ img_recover_objects = imread('recover_objects.tif');
 img_recover_objects = double(img_recover_objects(:,:,1:3)) / 255;
 img_split_objects = imread('split_objects.tif');
 img_split_objects = double(img_split_objects(:,:,1:3)) / 255;
+img_remove_objects = imread('remove_objects.tif');
+img_remove_objects = double(img_remove_objects(:,:,1:3)) / 255;
 %%
 %temp2 = hNucleiSegmentationGating.toolbar;
 temp2 = findall(hNucleiSegmentationGating.fig,'tag','FigureToolBar');
+hNucleiSegmentationGating.toggletool_DisplayDeleted= uitoggletool(temp2,'CData',img_display_deleted ,'TooltipString','Display deleted'          , 'Separator' , 'off' ,'ClickedCallback',@refreshgating2);
 hNucleiSegmentationGating.pushtool_DrawPoly        = uipushtool(  temp2,'CData',img_draw_polygon    ,'TooltipString','Draw a polygon'           , 'Separator' , 'off' ,'ClickedCallback',@drawpolygon);
 hNucleiSegmentationGating.pushtool_DeletePoly      = uipushtool(  temp2,'CData',img_delete_polygon  ,'TooltipString','Delete polygons'          , 'Separator' , 'off' ,'ClickedCallback',@deletepolygons);
 hNucleiSegmentationGating.pushtool_ClearSelected   = uipushtool(  temp2,'CData',img_deselect_all    ,'TooltipString','Clear selection'          , 'Separator' , 'off' ,'ClickedCallback',@clearselection);
 hNucleiSegmentationGating.pushtool_objects_delete  = uipushtool(  temp2,'CData',img_delete_objects  ,'TooltipString','Delete objects selected'  , 'Separator' , 'off' ,'ClickedCallback',@EditSegmentationPolygonObjects);
 hNucleiSegmentationGating.pushtool_objects_recover = uipushtool(  temp2,'CData',img_recover_objects ,'TooltipString','Recover objects selected' , 'Separator' , 'off' ,'ClickedCallback',@EditSegmentationPolygonObjects);
 hNucleiSegmentationGating.pushtool_objects_split   = uipushtool(  temp2,'CData',img_split_objects   ,'TooltipString','Split objects selected'   , 'Separator' , 'off' ,'ClickedCallback',@EditSegmentationPolygonObjects);
+hNucleiSegmentationGating.pushtool_objects_remove  = uipushtool(  temp2,'CData',img_remove_objects  ,'TooltipString','Remove objects selected'  , 'Separator' , 'off' ,'ClickedCallback',@EditSegmentationPolygonObjects);
 %%
 %%
 %%
 hNucleiSegmentationGating.panel_customize = uipanel(  'Parent',hNucleiSegmentationGating.fig,'Units','pixels','Position',[1 1 w_ctrl h_p1+h_p2]);
-hNucleiSegmentationGating.Check_customize = uicontrol('Parent',hNucleiSegmentationGating.panel_customize,'Style','Checkbox' , 'FontWeight', fw1, 'FontSize', fs1                     ,'Units','normalized','Position',[0.00 0.95 1.00 0.05], 'Visible','on' ,'String','Customize','Callback',@CallbackCustomize);
-hNucleiSegmentationGating.Text_features   = uicontrol('Parent',hNucleiSegmentationGating.panel_customize,'Style','Text'     , 'FontWeight', fw2, 'FontSize', fs2                     ,'Units','normalized','Position',[0.00 0.90 1.00 0.05], 'Visible','off','String','Features');
-hNucleiSegmentationGating.List_features   = uicontrol('parent',hNucleiSegmentationGating.panel_customize,'Style','listbox'  , 'FontWeight', fw1, 'FontSize', fs1 ,'min',0,'max',300  ,'Units','normalized','Position',[0.00 0.40 1.00 0.50], 'Visible','off','Value',[]);
-hNucleiSegmentationGating.Butt_features   = uicontrol('Parent',hNucleiSegmentationGating.panel_customize,'Style','push'     , 'FontWeight', fw1, 'FontSize', fs1                     ,'Units','normalized','Position',[0.00 0.35 1.00 0.05], 'Visible','off','String','Generate formula','Callback', @CallbackListbox_segmentationgating);
-hNucleiSegmentationGating.Text_formula    = uicontrol('Parent',hNucleiSegmentationGating.panel_customize,'Style','Text'     , 'FontWeight', fw2, 'FontSize', fs2                     ,'Units','normalized','Position',[0.00 0.30 1.00 0.05], 'Visible','off','String','Formula');
-hNucleiSegmentationGating.Edit_formula    = uicontrol('parent',hNucleiSegmentationGating.panel_customize,'Style','edit'     , 'FontWeight', fw1, 'FontSize', fs1 ,'min',0,'max',300  ,'Units','normalized','Position',[0.00 0.10 1.00 0.20], 'Visible','off');
-hNucleiSegmentationGating.Check_normalize = uicontrol('Parent',hNucleiSegmentationGating.panel_customize,'Style','Checkbox' , 'FontWeight', fw1, 'FontSize', fs1                     ,'Units','normalized','Position',[0.00 0.05 1.00 0.05], 'Visible','off','String','Normalize');
+hNucleiSegmentationGating.Text_setting    = uicontrol('Parent',hNucleiSegmentationGating.panel_customize,'Style','Text'     , 'FontWeight', fw2, 'FontSize', fs2                     ,'Units','normalized','Position',[0.00 0.95 1.00 0.05], 'Visible','on' ,'String','Settings');
+hNucleiSegmentationGating.bg_combinations = uibuttongroup('Parent',hNucleiSegmentationGating.panel_customize,'Visible','off'                                                         ,'Units','normalized','Position',[0.00 0.80 1.00 0.15]);
+hNucleiSegmentationGating.Radio11 = uicontrol('Parent',hNucleiSegmentationGating.bg_combinations ,'Style','radiobutton', 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 0.75 1.00 0.25 ],'String','Formula 1','HandleVisibility','off','Callback',@CallbackCustomize,'Value',1);
+hNucleiSegmentationGating.Radio12 = uicontrol('Parent',hNucleiSegmentationGating.bg_combinations ,'Style','radiobutton', 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 0.50 1.00 0.25 ],'String','Formula 2','HandleVisibility','off','Callback',@CallbackCustomize);
+hNucleiSegmentationGating.Radio13 = uicontrol('Parent',hNucleiSegmentationGating.bg_combinations ,'Style','radiobutton', 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 0.25 1.00 0.25 ],'String','Formula 3','HandleVisibility','off','Callback',@CallbackCustomize);
+hNucleiSegmentationGating.Radio14 = uicontrol('Parent',hNucleiSegmentationGating.bg_combinations ,'Style','radiobutton', 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 0.00 1.00 0.25 ],'String','User defined','HandleVisibility','off','Callback',@CallbackCustomize);
+hNucleiSegmentationGating.bg_combinations.Visible = 'on';
+hNucleiSegmentationGating.Text_features   = uicontrol('Parent',hNucleiSegmentationGating.panel_customize,'Style','Text'     , 'FontWeight', fw2, 'FontSize', fs2                     ,'Units','normalized','Position',[0.00 0.75 1.00 0.05], 'Visible','on' ,'String','Features');
+hNucleiSegmentationGating.List_features   = uicontrol('parent',hNucleiSegmentationGating.panel_customize,'Style','listbox'  , 'FontWeight', fw1, 'FontSize', fs1 ,'min',0,'max',300  ,'Units','normalized','Position',[0.00 0.35 1.00 0.40], 'Visible','on' ,'Value',[]);
+hNucleiSegmentationGating.Butt_features   = uicontrol('Parent',hNucleiSegmentationGating.panel_customize,'Style','push'     , 'FontWeight', fw1, 'FontSize', fs1                     ,'Units','normalized','Position',[0.00 0.30 1.00 0.05], 'Visible','off','String','Generate formula','Callback', @CallbackListbox_segmentationgating);
+hNucleiSegmentationGating.Text_formula    = uicontrol('Parent',hNucleiSegmentationGating.panel_customize,'Style','Text'     , 'FontWeight', fw2, 'FontSize', fs2                     ,'Units','normalized','Position',[0.00 0.25 1.00 0.05], 'Visible','on' ,'String','Formula');
+hNucleiSegmentationGating.Edit_formula    = uicontrol('parent',hNucleiSegmentationGating.panel_customize,'Style','edit'     , 'FontWeight', fw1, 'FontSize', fs1 ,'min',0,'max',300  ,'Units','normalized','Position',[0.00 0.10 1.00 0.15], 'Visible','on' );
+hNucleiSegmentationGating.Check_normalize = uicontrol('Parent',hNucleiSegmentationGating.panel_customize,'Style','Checkbox' , 'FontWeight', fw1, 'FontSize', fs1                     ,'Units','normalized','Position',[0.00 0.05 1.00 0.05], 'Visible','on' ,'String','Normalize','Value',1,'Callback', @showbutton);
 hNucleiSegmentationGating.Butt_formula    = uicontrol('Parent',hNucleiSegmentationGating.panel_customize,'Style','push'     , 'FontWeight', fw1, 'FontSize', fs1                     ,'Units','normalized','Position',[0.00 0.00 1.00 0.05], 'Visible','off','String','Update','Callback', @refreshgating2);
 %%
 %%
@@ -91,9 +103,9 @@ if ~isempty(temp0)
     if isfield(samplefile,'feature_sha_name')
         param.tmp.feature_names = [param.tmp.feature_names samplefile.feature_sha_name];
     end
-    if isfield(samplefile,'feature_coo_name')
-        param.tmp.feature_names = [param.tmp.feature_names samplefile.feature_coo_name];
-    end
+    %if isfield(samplefile,'feature_coo_name')
+    %    param.tmp.feature_names = [param.tmp.feature_names samplefile.feature_coo_name];
+    %end
     if isfield(samplefile,'feature_int_name')
         param.tmp.feature_names = [param.tmp.feature_names samplefile.feature_int_name];
     end
@@ -112,7 +124,7 @@ for i = 1:length(str)
     str{i} = ['v{' num2str(i) '}  ' str{i}];
 end
 set(hNucleiSegmentationGating.List_features,'String',str);
-str_formula = 'v{1},v{6},v{8},v{9},v{9}.^2./v{1},v{1}./v{9}';
+str_formula = param.tmp.str_formula_1;
 set(hNucleiSegmentationGating.Edit_formula,'String',str_formula);
 %%
 hNucleiSegmentationGating.axes1 = axes('Parent',hNucleiSegmentationGating.fig, 'Units','pixels','Position',[w_ctrl+1 1 w_axes h_p1+h_p2], 'xtick',[], 'ytick',[] );
@@ -127,6 +139,11 @@ param = Updatedisplay_Segmentationgating_2(param,false,[]);
 InformAllInterfaces(param);
 end
 %%
+function showbutton(h,~)
+param = guidata(h);
+param.hNucleiSegmentationGating.Butt_formula.Visible = 'on';
+guidata(h,param);
+end
 function clearselection(h,~)
 param = guidata(h);
 if isfield(param.hNucleiSegmentationGating,'poly')
@@ -197,24 +214,23 @@ end
 function CallbackCustomize(h,~)
 param = guidata(h);
 %%
-flag = get(param.hNucleiSegmentationGating.Check_customize,'value');
-if flag == 0
-    param.hNucleiSegmentationGating.Text_features.Visible = 'off';
-    param.hNucleiSegmentationGating.List_features.Visible = 'off';
-    param.hNucleiSegmentationGating.Butt_features.Visible = 'off';
-    param.hNucleiSegmentationGating.Text_formula.Visible = 'off';
-    param.hNucleiSegmentationGating.Edit_formula.Visible = 'off';
-    param.hNucleiSegmentationGating.Butt_formula.Visible = 'off';
-    param.hNucleiSegmentationGating.Check_normalize.Visible = 'off';
-else
-    param.hNucleiSegmentationGating.Text_features.Visible = 'on';
-    param.hNucleiSegmentationGating.List_features.Visible = 'on';
+if param.hNucleiSegmentationGating.Radio14.Value == 1
     param.hNucleiSegmentationGating.Butt_features.Visible = 'on';
-    param.hNucleiSegmentationGating.Text_formula.Visible = 'on';
-    param.hNucleiSegmentationGating.Edit_formula.Visible = 'on';
     param.hNucleiSegmentationGating.Butt_formula.Visible = 'on';
-    param.hNucleiSegmentationGating.Check_normalize.Visible = 'on';
+else
+    if param.hNucleiSegmentationGating.Radio11.Value == 1
+        str_formula = param.tmp.str_formula_1;
+    elseif param.hNucleiSegmentationGating.Radio12.Value == 1
+        str_formula = param.tmp.str_formula_2;
+    elseif param.hNucleiSegmentationGating.Radio13.Value == 1
+        str_formula = param.tmp.str_formula_3;
+    end
+    set(param.hNucleiSegmentationGating.Edit_formula,'String',str_formula);
+    set(param.hNucleiSegmentationGating.Check_normalize,'Value',1);
+    param.hNucleiSegmentationGating.Butt_features.Visible = 'off';
+    param.hNucleiSegmentationGating.Butt_formula.Visible = 'off';
 end
+param = Updatedisplay_Segmentationgating_2(param,false,[]);
 %%
 guidata(h,param);
 end

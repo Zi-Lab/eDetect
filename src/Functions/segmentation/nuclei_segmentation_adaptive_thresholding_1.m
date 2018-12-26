@@ -1,9 +1,10 @@
-function [ DL , ADJ ] = nuclei_segmentation_adaptive_thresholding_1( I , param_seg , max_depth , max_runtime , declump , merge)
-[h,w] = size(I);
-I0 = medfilt2(I,'symmetric');  
+function [ DL , ADJ ] = nuclei_segmentation_adaptive_thresholding_1( I , param_seg , medfilt2size , gaufilt2size , gaufilt2sigm , sensitivity , max_depth , max_runtime , declump , merge)
+I0 = I;
+[h,w] = size(I0);
+I0 = medfilt2(I0,'symmetric',[medfilt2size medfilt2size]);
+I0 = imgaussfilt(I0,gaufilt2sigm,'FilterSize',gaufilt2size);
 I1 = I0 - min(I0(:));
 %%
-sensitivity = 0.5;
 rad_min = param_seg.min_object/2;
 rad_med = param_seg.med_object/2;
 rad_max = param_seg.max_object/2;

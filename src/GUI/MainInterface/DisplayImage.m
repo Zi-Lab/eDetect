@@ -64,19 +64,21 @@ hMain.Text4.Visible = 'off';
 hMain.Edit4.Visible = 'off';
 hMain.SliderFrame4.Visible = 'off';
 %% navigator
-n_comp_1 = 6;
+n_comp_1 = 8;
 h_comp_1 = 1/n_comp_1;
 hMain.Text_panel_navigation = uicontrol('Parent',hMain.panel_navigation,'Style','Text'  , 'FontWeight', fw2, 'FontSize', fs2,'Units','normalized','Position',[0.00 1-2*h_comp_1 1.00 2*h_comp_1],'String','Navigation');
-hMain.Text1                 = uicontrol('Parent',hMain.panel_navigation,'Style','Text'  , 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 1-3*h_comp_1 1.00 h_comp_1],'String','Scene');
-hMain.Edit1                 = uicontrol('Parent',hMain.panel_navigation,'Style','Edit'  , 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 1-4*h_comp_1 w_ed h_comp_1],'String','1','enable', 'off');
-hMain.SliderFrame1          = uicontrol('Parent',hMain.panel_navigation,'Style','slider'                                    ,'Units','normalized','Position',[w_ed 1-4*h_comp_1 w_sl h_comp_1],'enable','off','Callback',@CallbackImageDisplayScene);
+hMain.Text_channel          = uicontrol('Parent',hMain.panel_navigation,'Style','Text'  , 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 1-3*h_comp_1 1.00 h_comp_1],'String','Channel');
+hMain.Drop_channel          = uicontrol('Parent',hMain.panel_navigation,'Style','popup' , 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 1-4*h_comp_1 1.00 h_comp_1], 'Callback',@CallbackDropChannel);
+hMain.Text1                 = uicontrol('Parent',hMain.panel_navigation,'Style','Text'  , 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 1-5*h_comp_1 1.00 h_comp_1],'String','Scene');
+hMain.Edit1                 = uicontrol('Parent',hMain.panel_navigation,'Style','Edit'  , 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 1-6*h_comp_1 w_ed h_comp_1],'String','1','enable', 'off');
+hMain.SliderFrame1          = uicontrol('Parent',hMain.panel_navigation,'Style','slider'                                    ,'Units','normalized','Position',[w_ed 1-6*h_comp_1 w_sl h_comp_1],'enable','off','Callback',@CallbackImageDisplayScene);
 if param.tmp.n_scene > 1
     step1 = [1/(param.tmp.n_scene-1) 2/(param.tmp.n_scene-1)];
     set(hMain.SliderFrame1,'Min',param.tmp.min_scene,'Max',param.tmp.max_scene,'Value',param.tmp.min_scene,'SliderStep',step1,'enable','on');
 end
-hMain.Text2                 = uicontrol('Parent',hMain.panel_navigation,'Style','Text'  , 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 1-5*h_comp_1 1.00 h_comp_1],'String','Frame');
-hMain.Edit2                 = uicontrol('Parent',hMain.panel_navigation,'Style','Edit'  , 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 1-6*h_comp_1 w_ed h_comp_1],'String','1','Callback',@CallbackImageDisplayFrame);
-hMain.SliderFrame2          = uicontrol('Parent',hMain.panel_navigation,'Style','slider'                                    ,'Units','normalized','Position',[w_ed 1-6*h_comp_1 w_sl h_comp_1],'enable','off','Callback',@CallbackImageDisplayFrame);
+hMain.Text2                 = uicontrol('Parent',hMain.panel_navigation,'Style','Text'  , 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 1-7*h_comp_1 1.00 h_comp_1],'String','Frame');
+hMain.Edit2                 = uicontrol('Parent',hMain.panel_navigation,'Style','Edit'  , 'FontWeight', fw1, 'FontSize', fs1,'Units','normalized','Position',[0.00 1-8*h_comp_1 w_ed h_comp_1],'String','1','Callback',@CallbackImageDisplayFrame);
+hMain.SliderFrame2          = uicontrol('Parent',hMain.panel_navigation,'Style','slider'                                    ,'Units','normalized','Position',[w_ed 1-8*h_comp_1 w_sl h_comp_1],'enable','off','Callback',@CallbackImageDisplayFrame);
 if param.tmp.n_time > 1
     step2 = [1/(param.tmp.n_time-1) 2/(param.tmp.n_time-1)];
     set(hMain.SliderFrame2,'Min',1,'Max',param.tmp.n_time,'Value',1,'SliderStep',step2,'enable','on');
@@ -84,7 +86,7 @@ end
 %% tools
 param.hMain = hMain;
 set(param.hMain.pushtool_measure_distance  , 'Enable', 'on');
-set(param.hMain.toggletool_channel         , 'Enable', 'on');
+set(param.hMain.Drop_channel,'String',{'Channel 1','Channel 2','Channel 3','Channel 4','Channel 5'});
 %%
 param.tmp.manual_list_selected_objects = zeros([1,0]);
 param = Updatedisplay_Image_1(param);

@@ -21,8 +21,8 @@ fs2 = 12;
 fw1 = 'normal';
 fw2 = 'bold';
 %%
-w_e1 = 0.45;
-w_s1 = 0.55;
+w_e1 = 0.40;
+w_s1 = 0.60;
 w_e2 = 0.40;
 w_s2 = 0.60;
 %%
@@ -71,7 +71,7 @@ hLineage.panel_display    = uipanel('Parent',hLineage.fig,'Units','pixels','Posi
 hLineage.panel_filters    = uipanel('Parent',hLineage.fig,'Units','pixels','Position',[1 h_p1      w_ctrl h_p1]);
 hLineage.panel_outlier    = uipanel('Parent',hLineage.fig,'Units','pixels','Position',[1 1         w_ctrl h_p1]);
 %% Cell lineage display settings
-n_comp_1 = 9;
+n_comp_1 = 12;
 h_comp_1 = 1/n_comp_1;
 hLineage.Text_controls = uicontrol('Parent',hLineage.panel_display,'Style','Text',   'Units','normalized', 'FontWeight', fw2, 'FontSize', fs2,'Position',[0.00 1-2*h_comp_1 1.00 2*h_comp_1], 'String','Display control');
 hLineage.Text1         = uicontrol('Parent',hLineage.panel_display,'Style','Text',   'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-3*h_comp_1 1.00 h_comp_1], 'String','Scene');
@@ -90,13 +90,22 @@ hLineage.Slider_disp_shi_horizontal = uicontrol('Parent',hLineage.panel_lineage,
 %
 param.tmp.frames_display_min = 1;
 param.tmp.frames_display_max = param.tmp.n_time;
-hLineage.Text_disp_min = uicontrol('Parent',hLineage.panel_display ,'Style','Text',      'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-7*h_comp_1 w_s1 h_comp_1], 'String','Frame: Min','HorizontalAlignment','Left');
+hLineage.Text_disp_min = uicontrol('Parent',hLineage.panel_display ,'Style','Text',      'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-7*h_comp_1 w_s1 h_comp_1], 'String','Frame: Start','HorizontalAlignment','Left');
 hLineage.Edit_disp_min = uicontrol('Parent',hLineage.panel_display ,'Style','Edit',      'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[w_s1 1-7*h_comp_1 w_e1 h_comp_1], 'String',num2str(param.tmp.frames_display_min),'Callback',@CallbackLineageFilter);
-hLineage.Text_disp_max = uicontrol('Parent',hLineage.panel_display ,'Style','Text',      'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-8*h_comp_1 w_s1 h_comp_1], 'String','Frame: Max','HorizontalAlignment','Left');
+hLineage.Text_disp_max = uicontrol('Parent',hLineage.panel_display ,'Style','Text',      'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-8*h_comp_1 w_s1 h_comp_1], 'String','Frame: End','HorizontalAlignment','Left');
 hLineage.Edit_disp_max = uicontrol('Parent',hLineage.panel_display ,'Style','Edit',      'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[w_s1 1-8*h_comp_1 w_e1 h_comp_1], 'String',num2str(param.tmp.frames_display_max),'Callback',@CallbackLineageFilter);
 %
-hLineage.Text_drop     = uicontrol('Parent',hLineage.panel_display,'Style','Text',       'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-9*h_comp_1 w_s1 h_comp_1], 'String','Measurement','HorizontalAlignment','Left');
-hLineage.Drop1         = uicontrol('Parent',hLineage.panel_display,'Style','popupmenu',  'Units','normalized', 'FontWeight', fw1, 'FontSize', fs0,'Position',[w_s1 1-9*h_comp_1 w_e1 h_comp_1], 'Callback',@CallbackDrop);
+hLineage.Text_Drop1    = uicontrol('Parent',hLineage.panel_display,'Style','Text',       'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-9*h_comp_1 w_s1 h_comp_1], 'String','Measurement','HorizontalAlignment','Left');
+hLineage.Drop1         = uicontrol('Parent',hLineage.panel_display,'Style','popupmenu',  'Units','normalized', 'FontWeight', fw1, 'FontSize', fs0,'Position',[w_s1 1-9*h_comp_1 w_e1 h_comp_1], 'Callback',@CallbackDropMeasurement);
+%
+hLineage.Text_Drop2    = uicontrol('Parent',hLineage.panel_display,'Style','Text',       'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-10*h_comp_1 w_s1 h_comp_1], 'String','Line color','HorizontalAlignment','Left');
+hLineage.Drop2         = uicontrol('Parent',hLineage.panel_display,'Style','popupmenu',  'Units','normalized', 'FontWeight', fw1, 'FontSize', fs0,'Position',[w_s1 1-10*h_comp_1 w_e1 h_comp_1], 'Callback',@CallbackDropColor);
+hLineage.Text_Drop3    = uicontrol('Parent',hLineage.panel_display,'Style','Text',       'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-11*h_comp_1 w_s1 h_comp_1], 'String','Heatmap color','HorizontalAlignment','Left');
+hLineage.Drop3         = uicontrol('Parent',hLineage.panel_display,'Style','popupmenu',  'Units','normalized', 'FontWeight', fw1, 'FontSize', fs0,'Position',[w_s1 1-11*h_comp_1 w_e1 h_comp_1], 'Callback',@CallbackDropColor);
+%
+hLineage.Text_caxis    = uicontrol('Parent',hLineage.panel_display ,'Style','Text',      'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00        1-12*h_comp_1 w_s1   h_comp_1], 'String','Color limits','HorizontalAlignment','Left');
+hLineage.Edit_cmin     = uicontrol('Parent',hLineage.panel_display ,'Style','Edit',      'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[w_s1        1-12*h_comp_1 w_e1/2 h_comp_1], 'String','','Callback',@CallbackDropColor);
+hLineage.Edit_cmax     = uicontrol('Parent',hLineage.panel_display ,'Style','Edit',      'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[w_s1+w_e1/2 1-12*h_comp_1 w_e1/2 h_comp_1], 'String','','Callback',@CallbackDropColor);
 %% Cell lineage filters
 n_comp_2 = 7;
 h_comp_2 = 1/n_comp_2;
@@ -104,13 +113,13 @@ param.tmp.frames_filter_min = [];
 param.tmp.frames_filter_max = [];
 param.tmp.frames_filter_len = 2;
 hLineage.Text_filter    = uicontrol('Parent',hLineage.panel_filters,'Style','Text',  'Units','normalized', 'FontWeight', fw2, 'FontSize', fs2,'Position',[0.00 1-2*h_comp_2 1.00 2*h_comp_2], 'String','Lineage filters');
-hLineage.Check_filt_len = uicontrol('Parent',hLineage.panel_filters,'Style','Check', 'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-3*h_comp_2 1.00 1*h_comp_2] ,'String','Length','Value',1,'Callback',@CallbackLineageCheckbox);
+hLineage.Check_filt_len = uicontrol('Parent',hLineage.panel_filters,'Style','Check', 'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-3*h_comp_2 1.00 1*h_comp_2] ,'String','Length of lineages','Value',1,'Callback',@CallbackLineageCheckbox);
 hLineage.Text_filt_len  = uicontrol('Parent',hLineage.panel_filters,'Style','Text',  'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-4*h_comp_2 w_s1 h_comp_2], 'String','Min');
 hLineage.Edit_filt_len  = uicontrol('Parent',hLineage.panel_filters,'Style','Edit',  'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[w_s1 1-4*h_comp_2 w_e1 h_comp_2], 'String',num2str(param.tmp.frames_filter_len),'Callback',@CallbackLineageFilter);
-hLineage.Check_filt_foi = uicontrol('Parent',hLineage.panel_filters,'Style','Check', 'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-5*h_comp_2 1.00 h_comp_2], 'String','Frames of interest','Callback',@CallbackLineageCheckbox);
-hLineage.Text_filt_min  = uicontrol('Parent',hLineage.panel_filters,'Style','Text',  'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-6*h_comp_2 w_s1 h_comp_2], 'String','Start');
+hLineage.Check_filt_foi = uicontrol('Parent',hLineage.panel_filters,'Style','Check', 'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-5*h_comp_2 1.00 h_comp_2], 'String','Required frames','Callback',@CallbackLineageCheckbox);
+hLineage.Text_filt_min  = uicontrol('Parent',hLineage.panel_filters,'Style','Text',  'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-6*h_comp_2 w_s1 h_comp_2], 'String','From');
 hLineage.Edit_filt_min  = uicontrol('Parent',hLineage.panel_filters,'Style','Edit',  'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[w_s1 1-6*h_comp_2 w_e1 h_comp_2], 'String',num2str(param.tmp.frames_filter_min),'Callback',@CallbackLineageFilter);
-hLineage.Text_filt_max  = uicontrol('Parent',hLineage.panel_filters,'Style','Text',  'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-7*h_comp_2 w_s1 h_comp_2], 'String','End');
+hLineage.Text_filt_max  = uicontrol('Parent',hLineage.panel_filters,'Style','Text',  'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[0.00 1-7*h_comp_2 w_s1 h_comp_2], 'String','To');
 hLineage.Edit_filt_max  = uicontrol('Parent',hLineage.panel_filters,'Style','Edit',  'Units','normalized', 'FontWeight', fw1, 'FontSize', fs1,'Position',[w_s1 1-7*h_comp_2 w_e1 h_comp_2], 'String',num2str(param.tmp.frames_filter_max),'Callback',@CallbackLineageFilter);
 hLineage.Text_filt_len.Enable = 'on';
 hLineage.Edit_filt_len.Enable = 'on';
@@ -138,6 +147,12 @@ hLineage.Edit_outlier_before.Visible = 'off';
 hLineage.Edit_outlier_after.Visible = 'off';
 hLineage.Edit_outlier_nosd.Visible = 'off';
 %%
+colors_line = {'yellow','magenta','cyan','red','green','blue','white','black'};
+set(hLineage.Drop2,'String', colors_line);
+set(hLineage.Drop2,'Value',6);
+colors_heatmap = {'parula','jet','hsv','hot','cool','spring','summer','autumn','winter','gray','bone','copper','pink'};
+set(hLineage.Drop3,'String', colors_heatmap);
+set(hLineage.Drop3,'Value',10);
 %%
 param.tmp.zoomin_vertical = 1;
 param.tmp.zoomin_horizontal = 1;

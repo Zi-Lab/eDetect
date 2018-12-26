@@ -6,12 +6,12 @@ bins = conncomp(G);
 comp = unique(bins);
 m = length(comp);
 ids = cell(1,m);
-subgraphs = zeros([n,n,m])==1;
 edges = cell(1,m);
 for i = 1:m
     ids{i} = find(bins == comp(i));
-    subgraphs(ids{i},ids{i},i) = ADJ.is_adjacent(ids{i},ids{i});
-    [temp1,temp2] = find(subgraphs(:,:,i));
+    subgraph = false([n,n]);
+    subgraph(ids{i},ids{i}) = ADJ.is_adjacent(ids{i},ids{i});
+    [temp1,temp2] = find(subgraph);
     edges{i} = unique(sort([temp1,temp2],2),'rows');
 end
 for i = 1:m

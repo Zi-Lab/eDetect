@@ -17,19 +17,57 @@ end
 %%
 s = CurrentScene;
 s_id = find(param.tmp.scenes_all == s);
-if     strcmp( get(param.hMain.toggletool_channel,'State') , 'off')
-    str_dir = param.tmp.dir_nucleimarker;
-    str_file = param.tmp.filenames_nucleimarker{s_id,CurrentFrame};
-elseif strcmp( get(param.hMain.toggletool_channel,'State') , 'on' )
-    str_dir = param.tmp.dir_proteinofinterest;
-    str_file = param.tmp.filenames_proteinofinterest{s_id,CurrentFrame};
+%%
+c = get(param.hMain.Drop_channel,'Value');
+switch c
+    case 1
+        str_dir = param.tmp.dir_nucleimarker;
+        str_file = param.tmp.filenames_nucleimarker{s_id,CurrentFrame};
+    case 2
+        if size(param.tmp.filenames_proteinofinterest1,1) < s_id || size(param.tmp.filenames_proteinofinterest1,2) < CurrentFrame
+            str_dir = [];
+            str_file = [];
+        else
+            str_dir = param.tmp.dir_proteinofinterest1;
+            str_file = param.tmp.filenames_proteinofinterest1{s_id,CurrentFrame};
+        end
+    case 3
+        if size(param.tmp.filenames_proteinofinterest2,1) < s_id || size(param.tmp.filenames_proteinofinterest2,2) < CurrentFrame
+            str_dir = [];
+            str_file = [];
+        else
+            str_dir = param.tmp.dir_proteinofinterest2;
+            str_file = param.tmp.filenames_proteinofinterest2{s_id,CurrentFrame};
+        end
+    case 4
+        if size(param.tmp.filenames_proteinofinterest3,1) < s_id || size(param.tmp.filenames_proteinofinterest3,2) < CurrentFrame
+            str_dir = [];
+            str_file = [];
+        else
+            str_dir = param.tmp.dir_proteinofinterest3;
+            str_file = param.tmp.filenames_proteinofinterest3{s_id,CurrentFrame};
+        end
+    case 5
+        if size(param.tmp.filenames_proteinofinterest4,1) < s_id || size(param.tmp.filenames_proteinofinterest4,2) < CurrentFrame
+            str_dir = [];
+            str_file = [];
+        else
+            str_dir = param.tmp.dir_proteinofinterest4;
+            str_file = param.tmp.filenames_proteinofinterest4{s_id,CurrentFrame};
+        end
+    otherwise
+        str_dir = [];
+        str_file = [];
 end
+%%
 param.tmp.I = [];
 if ~isempty(str_dir)
     if exist(str_dir,'dir') == 7
         temp = fullfile(str_dir , str_file);
         if exist(temp,'file') == 2
             param.tmp.I = imread(temp);
+            param.tmp.h = size(param.tmp.I,1);
+            param.tmp.w = size(param.tmp.I,2);
         end
     end
 end

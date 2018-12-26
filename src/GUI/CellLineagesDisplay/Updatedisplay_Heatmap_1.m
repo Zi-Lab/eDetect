@@ -24,7 +24,7 @@ else
     LineageFilterLength = param.tmp.frames_filter_len;
 end
 %
-filter1 = all( param.tmp.manual_lineage_tree( : , LineageFilterFramesOfInterest ) > 0 , 2);
+filter1 = all(param.tmp.manual_lineage_tree( : , LineageFilterFramesOfInterest ) > 0 , 2);
 filter2 = sum(param.tmp.manual_lineage_tree > 0,2) >= LineageFilterLength;
 param.tmp.lineage_filter = filter1 & filter2;
 %

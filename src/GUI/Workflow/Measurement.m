@@ -25,13 +25,13 @@ if exist(param.tmp.dir_measurement,'dir') == 7
     end
 end
 %%
-if param.set.processing_number_of_cores > 1
+if param.tmp.processing_number_of_cores > 1
     p = gcp('nocreate');
     if isempty(p)
         hMsg = msgbox('Starting parallel pool...','Information','help');
         delete(findobj(hMsg,'string','OK'));
         try
-            parpool('local',param.set.processing_number_of_cores);
+            parpool('local',param.tmp.processing_number_of_cores);
         catch e
             msgbox([e.message],'Warning','warn');
         end
@@ -45,18 +45,35 @@ directories_label_measure = param.tmp.directories_label_measure;
 filenames_label_measure = param.tmp.filenames_label_measure;
 directories_label_gray  = param.tmp.directories_label_gray;
 filenames_label_gray  = param.tmp.filenames_label_gray;
-directories_measurement = param.tmp.directories_measurement;
-filenames_measurement = param.tmp.filenames_measurement;
-dir_proteinofinterest = param.tmp.dir_proteinofinterest;
-filenames_proteinofinterest = param.tmp.filenames_proteinofinterest;
+directories_measurement1 = param.tmp.directories_measurement1;
+filenames_measurement1 = param.tmp.filenames_measurement1;
+directories_measurement2 = param.tmp.directories_measurement2;
+filenames_measurement2 = param.tmp.filenames_measurement2;
+directories_measurement3 = param.tmp.directories_measurement3;
+filenames_measurement3 = param.tmp.filenames_measurement3;
+directories_measurement4 = param.tmp.directories_measurement4;
+filenames_measurement4 = param.tmp.filenames_measurement4;
+dir_proteinofinterest1 = param.tmp.dir_proteinofinterest1;
+filenames_proteinofinterest1 = param.tmp.filenames_proteinofinterest1;
+dir_proteinofinterest2 = param.tmp.dir_proteinofinterest2;
+filenames_proteinofinterest2 = param.tmp.filenames_proteinofinterest2;
+dir_proteinofinterest3 = param.tmp.dir_proteinofinterest3;
+filenames_proteinofinterest3 = param.tmp.filenames_proteinofinterest3;
+dir_proteinofinterest4 = param.tmp.dir_proteinofinterest4;
+filenames_proteinofinterest4 = param.tmp.filenames_proteinofinterest4;
 %%
-scene_array = str2double(strsplit(param.set.processing_scenes,' '));
+scene_array = str2double(strsplit(param.tmp.processing_scenes,' '));
 if isnan(scene_array)
     scene_array = param.tmp.scenes_all;
 end
 scenes_for_measure = scene_array;
 %%
-hbar = parfor_progressbar(param.tmp.n_time * length(scenes_for_measure) ,param.tmp.dir_label_measurement , '1st step...');
+flag_pi1 = CheckInputImages(param.tmp.dir_proteinofinterest1 , param.tmp.filenames_proteinofinterest1, param.tmp.scenes_all , param.tmp.n_time , false);
+flag_pi2 = CheckInputImages(param.tmp.dir_proteinofinterest2 , param.tmp.filenames_proteinofinterest2, param.tmp.scenes_all , param.tmp.n_time , false);
+flag_pi3 = CheckInputImages(param.tmp.dir_proteinofinterest3 , param.tmp.filenames_proteinofinterest3, param.tmp.scenes_all , param.tmp.n_time , false);
+flag_pi4 = CheckInputImages(param.tmp.dir_proteinofinterest4 , param.tmp.filenames_proteinofinterest4, param.tmp.scenes_all , param.tmp.n_time , false);
+%%
+hbar = parfor_progressbar(param.tmp.n_time * length(scenes_for_measure) ,param.tmp.dir_label_measurement , '1st step: generating masks for quantification.');
 for i = 1:length(scenes_for_measure)
     s = scenes_for_measure(i);
     s_id = find(param.tmp.scenes_all == s);
@@ -65,7 +82,7 @@ for i = 1:length(scenes_for_measure)
     end
     param_seg = param.seg;
     param_exp = param.exp;
-    if param.set.processing_number_of_cores > 1
+    if param.tmp.processing_number_of_cores > 1
         parfor t = 1:param.tmp.n_time
             execute_nuclei_expansion(param_seg,param_exp , directories_label_gray{s_id} , filenames_label_gray{s_id,t} , directories_label_measure{s_id} , filenames_label_measure{s_id,t} );
             hbar.iterate(1);
@@ -79,24 +96,86 @@ for i = 1:length(scenes_for_measure)
 end
 close(hbar);
 %%
-hbar = parfor_progressbar(param.tmp.n_time * length(scenes_for_measure) ,param.tmp.dir_proteinofinterest , '2nd step...');
-for i = 1:length(scenes_for_measure)
-    s = scenes_for_measure(i);
-    s_id = find(param.tmp.scenes_all == s);
-    mkdir( directories_measurement{s_id});
-    if param.set.processing_number_of_cores > 1
-        parfor t = 1:param.tmp.n_time
-            execute_intensity_quantification( directories_label_measure{s_id} , filenames_label_measure{s_id,t} , dir_proteinofinterest , filenames_proteinofinterest{s_id,t} , directories_measurement{s_id} , filenames_measurement{s_id,t});
-            hbar.iterate(1);
-        end
-    else
-        for t = 1:param.tmp.n_time
-            execute_intensity_quantification( directories_label_measure{s_id} , filenames_label_measure{s_id,t} , dir_proteinofinterest , filenames_proteinofinterest{s_id,t} , directories_measurement{s_id} , filenames_measurement{s_id,t});
-            hbar.iterate(1);
+if flag_pi1 && size(filenames_proteinofinterest1,1) == length(scenes_for_measure) && size(filenames_proteinofinterest1,2) == param.tmp.n_time
+    hbar = parfor_progressbar(param.tmp.n_time * length(scenes_for_measure) ,param.tmp.dir_proteinofinterest1 , '2nd step: quantification of Channel 2');
+    for i = 1:length(scenes_for_measure)
+        s = scenes_for_measure(i);
+        s_id = find(param.tmp.scenes_all == s);
+        mkdir( directories_measurement1{s_id});
+        if param.tmp.processing_number_of_cores > 1
+            parfor t = 1:param.tmp.n_time
+                execute_intensity_quantification( directories_label_measure{s_id} , filenames_label_measure{s_id,t} , dir_proteinofinterest1 , filenames_proteinofinterest1{s_id,t} , directories_measurement1{s_id} , filenames_measurement1{s_id,t});
+                hbar.iterate(1);
+            end
+        else
+            for t = 1:param.tmp.n_time
+                execute_intensity_quantification( directories_label_measure{s_id} , filenames_label_measure{s_id,t} , dir_proteinofinterest1 , filenames_proteinofinterest1{s_id,t} , directories_measurement1{s_id} , filenames_measurement1{s_id,t});
+                hbar.iterate(1);
+            end
         end
     end
+    close(hbar);
 end
-close(hbar);
+if flag_pi2 && size(filenames_proteinofinterest2,1) == length(scenes_for_measure) && size(filenames_proteinofinterest2,2) == param.tmp.n_time
+    hbar = parfor_progressbar(param.tmp.n_time * length(scenes_for_measure) ,param.tmp.dir_proteinofinterest2 , '2nd step: quantification of Channel 3');
+    for i = 1:length(scenes_for_measure)
+        s = scenes_for_measure(i);
+        s_id = find(param.tmp.scenes_all == s);
+        mkdir( directories_measurement2{s_id});
+        if param.tmp.processing_number_of_cores > 1
+            parfor t = 1:param.tmp.n_time
+                execute_intensity_quantification( directories_label_measure{s_id} , filenames_label_measure{s_id,t} , dir_proteinofinterest2 , filenames_proteinofinterest2{s_id,t} , directories_measurement2{s_id} , filenames_measurement2{s_id,t});
+                hbar.iterate(1);
+            end
+        else
+            for t = 1:param.tmp.n_time
+                execute_intensity_quantification( directories_label_measure{s_id} , filenames_label_measure{s_id,t} , dir_proteinofinterest2 , filenames_proteinofinterest2{s_id,t} , directories_measurement2{s_id} , filenames_measurement2{s_id,t});
+                hbar.iterate(1);
+            end
+        end
+    end
+    close(hbar);
+end
+if flag_pi3 && size(filenames_proteinofinterest3,1) == length(scenes_for_measure) && size(filenames_proteinofinterest3,2) == param.tmp.n_time
+    hbar = parfor_progressbar(param.tmp.n_time * length(scenes_for_measure) ,param.tmp.dir_proteinofinterest3 , '2nd step: quantification of Channel 4');
+    for i = 1:length(scenes_for_measure)
+        s = scenes_for_measure(i);
+        s_id = find(param.tmp.scenes_all == s);
+        mkdir( directories_measurement3{s_id});
+        if param.tmp.processing_number_of_cores > 1
+            parfor t = 1:param.tmp.n_time
+                execute_intensity_quantification( directories_label_measure{s_id} , filenames_label_measure{s_id,t} , dir_proteinofinterest3 , filenames_proteinofinterest3{s_id,t} , directories_measurement3{s_id} , filenames_measurement3{s_id,t});
+                hbar.iterate(1);
+            end
+        else
+            for t = 1:param.tmp.n_time
+                execute_intensity_quantification( directories_label_measure{s_id} , filenames_label_measure{s_id,t} , dir_proteinofinterest3 , filenames_proteinofinterest3{s_id,t} , directories_measurement3{s_id} , filenames_measurement3{s_id,t});
+                hbar.iterate(1);
+            end
+        end
+    end
+    close(hbar);
+end
+if flag_pi4 && size(filenames_proteinofinterest4,1) == length(scenes_for_measure) && size(filenames_proteinofinterest4,2) == param.tmp.n_time
+    hbar = parfor_progressbar(param.tmp.n_time * length(scenes_for_measure) ,param.tmp.dir_proteinofinterest4 , '2nd step: quantification of Channel 5');
+    for i = 1:length(scenes_for_measure)
+        s = scenes_for_measure(i);
+        s_id = find(param.tmp.scenes_all == s);
+        mkdir( directories_measurement4{s_id});
+        if param.tmp.processing_number_of_cores > 1
+            parfor t = 1:param.tmp.n_time
+                execute_intensity_quantification( directories_label_measure{s_id} , filenames_label_measure{s_id,t} , dir_proteinofinterest4 , filenames_proteinofinterest4{s_id,t} , directories_measurement4{s_id} , filenames_measurement4{s_id,t});
+                hbar.iterate(1);
+            end
+        else
+            for t = 1:param.tmp.n_time
+                execute_intensity_quantification( directories_label_measure{s_id} , filenames_label_measure{s_id,t} , dir_proteinofinterest4 , filenames_proteinofinterest4{s_id,t} , directories_measurement4{s_id} , filenames_measurement4{s_id,t});
+                hbar.iterate(1);
+            end
+        end
+    end
+    close(hbar);
+end
 %%
 [ param ] = CheckStatus( param );
 InformAllInterfaces(param);
