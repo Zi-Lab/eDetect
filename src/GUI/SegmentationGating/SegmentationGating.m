@@ -152,7 +152,7 @@ if isfield(param.hNucleiSegmentationGating,'poly')
 end
 param.tmp.segmentation_gating_selected = false([size(param.tmp.pc_segmentationgating,1),1]);
 param = Updatedisplay_Segmentationgating_0(param);
-guidata(h,param);
+InformAllInterfaces(param);
 end
 %%
 function drawpolygon(h,~)

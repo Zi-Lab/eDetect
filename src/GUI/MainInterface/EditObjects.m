@@ -127,9 +127,9 @@ savefile(param.tmp.manual_label_info        , 'label_info' , fullfile(directorie
 param.tmp.manual_list_selected_objects = [];
 param = Updatedisplay_Image_1(param);
 InformAllInterfaces(param);
-if isempty(unmapped_centroids)
-    return;
-end
+%if isempty(unmapped_centroids)
+%    return;
+%end
 %%
 %%
 %%
@@ -243,6 +243,5 @@ if isfield(param,'hSynchrogram')
     end
 end
 %%
-%profsave
 InformAllInterfaces(param);
 end

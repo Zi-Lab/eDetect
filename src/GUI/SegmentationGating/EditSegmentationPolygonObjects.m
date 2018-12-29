@@ -165,21 +165,7 @@ for l = 1:np
         if exist(path1,'file') == 2
             temp1 = load(path1);
             lineage = temp1.lineage;
-            if h == h_split || h == h_recover || h == h_remove
-                lineage = lineage_reconfigure(lineage , t , track);
-            elseif h == h_delete
-                for i = temp_cell_array{l}
-                    [ lineage ]  = lineage_edit( lineage , t   , i , 0 );
-                end
-                if t < n_time
-                    for i = temp_cell_array{l}
-                        tmp = lineage(lineage(:,t) == i & lineage(:,t+1) > 0,t+1)';
-                        for j = tmp
-                            [ lineage ]  = lineage_edit( lineage , t+1 , j , 0 );
-                        end
-                    end
-                end
-            end
+            lineage = lineage_reconfigure(lineage , t , track);
             savefile( lineage , 'lineage' , path1  );
         end
     end
