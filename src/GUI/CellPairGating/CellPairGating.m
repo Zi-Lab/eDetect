@@ -137,7 +137,7 @@ if isfield(param.hNucleiCellpairGating,'poly')
     param.hNucleiCellpairGating = rmfield(param.hNucleiCellpairGating,'poly');
 end
 param.tmp.cellpair_gating_selected = false([size(param.tmp.pc_cellpairgating,1),1]);
-Updatedisplay_Cellpairgating_0(param);
+param = Updatedisplay_Cellpairgating_0(param);
 InformAllInterfaces(param);
 end
 %%
