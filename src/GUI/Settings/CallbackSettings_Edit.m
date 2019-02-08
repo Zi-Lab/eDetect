@@ -126,12 +126,12 @@ end
 %%
 if h == param.hSettings.Edit_segmentation_gaufilt2size
     temp = round(str2double(get(param.hSettings.Edit_segmentation_gaufilt2size, 'String')));
-    if temp > 0
+    if temp > 0 && mod(temp,2) == 1
         param.set.segmentation_gaufilt2size = temp;
         param.hSettings.Edit_segmentation_gaufilt2size.String = num2str(temp);
     else
         param.hSettings.Edit_segmentation_gaufilt2size.String = num2str(param.set.segmentation_gaufilt2size);
-        msgbox('This parameter is a positive integer.','Error','error');
+        msgbox('This parameter is a positive odd integer.','Error','error');
         return;
     end
 end
