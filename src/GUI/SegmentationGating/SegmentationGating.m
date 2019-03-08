@@ -232,5 +232,5 @@ else
 end
 param = Updatedisplay_Segmentationgating_2(param,false,[]);
 %%
-guidata(h,param);
+InformAllInterfaces(param);
 end
