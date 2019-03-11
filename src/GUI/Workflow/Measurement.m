@@ -2,28 +2,6 @@ function Measurement(h,~)
 param = guidata(h);
 CloseAllInterfacesButMain(param);
 %%
-if exist(param.tmp.dir_label_measurement,'dir') == 7
-    ButtonName = questdlg('Results already exist. Overwrite existing results?', 'Question', 'Yes', 'Cancel', 'Cancel');
-    switch ButtonName
-        case 'Yes'
-            [status, message, messageid] = rmdir(param.tmp.dir_label_measurement, 's');
-        case 'Cancel'
-            return;
-        case ''
-            return;
-    end
-end
-if exist(param.tmp.dir_measurement,'dir') == 7
-    ButtonName = questdlg('Results already exist. Overwrite existing results?', 'Question', 'Yes', 'Cancel', 'Cancel');
-    switch ButtonName
-        case 'Yes'
-            [status, message, messageid] = rmdir(param.tmp.dir_measurement, 's');
-        case 'Cancel'
-            return;
-        case ''
-            return;
-    end
-end
 %%
 if param.tmp.processing_number_of_cores > 1
     p = gcp('nocreate');
@@ -73,6 +51,17 @@ flag_pi2 = CheckInputImages(param.tmp.dir_proteinofinterest2 , param.tmp.filenam
 flag_pi3 = CheckInputImages(param.tmp.dir_proteinofinterest3 , param.tmp.filenames_proteinofinterest3, param.tmp.scenes_all , param.tmp.n_time , false);
 flag_pi4 = CheckInputImages(param.tmp.dir_proteinofinterest4 , param.tmp.filenames_proteinofinterest4, param.tmp.scenes_all , param.tmp.n_time , false);
 %%
+if exist(param.tmp.dir_label_measurement,'dir') == 7
+    ButtonName = questdlg('Results already exist. Overwrite existing results?', 'Question', 'Yes', 'Cancel', 'Cancel');
+    switch ButtonName
+        case 'Yes'
+            [status, message, messageid] = rmdir(param.tmp.dir_label_measurement, 's');
+        case 'Cancel'
+            return;
+        case ''
+            return;
+    end
+end
 hbar = parfor_progressbar(param.tmp.n_time * length(scenes_for_measure) ,param.tmp.dir_label_measurement , '1st step: generating masks for quantification.');
 for i = 1:length(scenes_for_measure)
     s = scenes_for_measure(i);
@@ -97,6 +86,17 @@ end
 close(hbar);
 %%
 if flag_pi1 && size(filenames_proteinofinterest1,1) == length(scenes_for_measure) && size(filenames_proteinofinterest1,2) == param.tmp.n_time
+    if exist(param.tmp.dir_measurement1,'dir') == 7
+        ButtonName = questdlg('Results already exist. Overwrite existing results?', 'Question', 'Yes', 'Cancel', 'Cancel');
+        switch ButtonName
+            case 'Yes'
+                [status, message, messageid] = rmdir(param.tmp.dir_measurement1, 's');
+            case 'Cancel'
+                return;
+            case ''
+                return;
+        end
+    end
     hbar = parfor_progressbar(param.tmp.n_time * length(scenes_for_measure) ,param.tmp.dir_proteinofinterest1 , '2nd step: quantification of Channel 2');
     for i = 1:length(scenes_for_measure)
         s = scenes_for_measure(i);
@@ -118,6 +118,17 @@ if flag_pi1 && size(filenames_proteinofinterest1,1) == length(scenes_for_measure
 end
 if flag_pi2 && size(filenames_proteinofinterest2,1) == length(scenes_for_measure) && size(filenames_proteinofinterest2,2) == param.tmp.n_time
     hbar = parfor_progressbar(param.tmp.n_time * length(scenes_for_measure) ,param.tmp.dir_proteinofinterest2 , '2nd step: quantification of Channel 3');
+    if exist(param.tmp.dir_measurement2,'dir') == 7
+        ButtonName = questdlg('Results already exist. Overwrite existing results?', 'Question', 'Yes', 'Cancel', 'Cancel');
+        switch ButtonName
+            case 'Yes'
+                [status, message, messageid] = rmdir(param.tmp.dir_measurement2, 's');
+            case 'Cancel'
+                return;
+            case ''
+                return;
+        end
+    end
     for i = 1:length(scenes_for_measure)
         s = scenes_for_measure(i);
         s_id = find(param.tmp.scenes_all == s);
@@ -137,6 +148,17 @@ if flag_pi2 && size(filenames_proteinofinterest2,1) == length(scenes_for_measure
     close(hbar);
 end
 if flag_pi3 && size(filenames_proteinofinterest3,1) == length(scenes_for_measure) && size(filenames_proteinofinterest3,2) == param.tmp.n_time
+    if exist(param.tmp.dir_measurement3,'dir') == 7
+        ButtonName = questdlg('Results already exist. Overwrite existing results?', 'Question', 'Yes', 'Cancel', 'Cancel');
+        switch ButtonName
+            case 'Yes'
+                [status, message, messageid] = rmdir(param.tmp.dir_measurement3, 's');
+            case 'Cancel'
+                return;
+            case ''
+                return;
+        end
+    end
     hbar = parfor_progressbar(param.tmp.n_time * length(scenes_for_measure) ,param.tmp.dir_proteinofinterest3 , '2nd step: quantification of Channel 4');
     for i = 1:length(scenes_for_measure)
         s = scenes_for_measure(i);
@@ -157,6 +179,17 @@ if flag_pi3 && size(filenames_proteinofinterest3,1) == length(scenes_for_measure
     close(hbar);
 end
 if flag_pi4 && size(filenames_proteinofinterest4,1) == length(scenes_for_measure) && size(filenames_proteinofinterest4,2) == param.tmp.n_time
+    if exist(param.tmp.dir_measurement4,'dir') == 7
+        ButtonName = questdlg('Results already exist. Overwrite existing results?', 'Question', 'Yes', 'Cancel', 'Cancel');
+        switch ButtonName
+            case 'Yes'
+                [status, message, messageid] = rmdir(param.tmp.dir_measurement4, 's');
+            case 'Cancel'
+                return;
+            case ''
+                return;
+        end
+    end
     hbar = parfor_progressbar(param.tmp.n_time * length(scenes_for_measure) ,param.tmp.dir_proteinofinterest4 , '2nd step: quantification of Channel 5');
     for i = 1:length(scenes_for_measure)
         s = scenes_for_measure(i);
